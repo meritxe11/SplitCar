@@ -1,0 +1,227 @@
+{
+  "cars": {
+    "car1": {
+      "id": "car1",
+      "nom": "Golf GTI",
+      "emoji": "\ud83d\ude97",
+      "usuaris": [
+        {
+          "id": "u1",
+          "nom": "Marc"
+        },
+        {
+          "id": "u2",
+          "nom": "Joan"
+        },
+        {
+          "id": "u3",
+          "nom": "Clara"
+        }
+      ],
+      "despeses": [
+        {
+          "id": "d6",
+          "descripcio": "Dip\u00c3\u00b2sit Repsol",
+          "usuari": "Marc",
+          "import": 60.0,
+          "data": "2024-05-20"
+        },
+        {
+          "id": "d7",
+          "descripcio": "Benzina Taradell",
+          "usuari": "Marc",
+          "import": 45.0,
+          "data": "2024-05-21"
+        },
+        {
+          "id": "d8",
+          "descripcio": "Benzinera Eix",
+          "usuari": "Marc",
+          "import": 50.0,
+          "data": "2024-05-22"
+        },
+        {
+          "id": "d9",
+          "descripcio": "Repsol Canovelles",
+          "usuari": "Clara",
+          "import": 40.0,
+          "data": "2024-05-23"
+        },
+        {
+          "id": "d10",
+          "descripcio": "Diesel bonificat",
+          "usuari": "Clara",
+          "import": 55.0,
+          "data": "2024-05-24"
+        },
+        {
+          "id": "d_11541bde",
+          "usuari": "Joan",
+          "import": 0.0,
+          "descripcio": "",
+          "data": "2025-05-22"
+        },
+        {
+          "id": "d_1c257546",
+          "usuari": "Joan",
+          "import": 0.0,
+          "descripcio": "",
+          "data": "2025-05-22"
+        },
+        {
+          "id": "d_7af52362",
+          "usuari": "Clara",
+          "import": 15.0,
+          "descripcio": "Intent",
+          "data": "2025-05-12"
+        }
+      ],
+      "usos": [
+        {
+          "id": "km7",
+          "usuari": "Joan",
+          "km": 130,
+          "data": "2024-05-21",
+          "descripcio": "Reuni\u00c3\u00b3 a Barcelona"
+        },
+        {
+          "id": "km8",
+          "usuari": "Joan",
+          "km": 90,
+          "data": "2024-05-21",
+          "descripcio": "Reuni\u00c3\u00b3 a Barcelona"
+        },
+        {
+          "id": "km9",
+          "usuari": "Joan",
+          "km": 70,
+          "data": "2024-05-22",
+          "descripcio": "Reuni\u00c3\u00b3 a Barcelona"
+        },
+        {
+          "id": "km10",
+          "usuari": "Marc",
+          "km": 100,
+          "data": "2024-05-23",
+          "descripcio": "Reuni\u00c3\u00b3 a Barcelona"
+        },
+        {
+          "id": "km11",
+          "usuari": "Clara",
+          "km": 80,
+          "data": "2024-05-23",
+          "descripcio": "Reuni\u00c3\u00b3 a Barcelona"
+        },
+        {
+          "id": "km12",
+          "usuari": "Marc",
+          "km": 60,
+          "data": "2024-05-24",
+          "descripcio": "Reuni\u00c3\u00b3 a Barcelona"
+        },
+        {
+          "id": "km_fb69e7c5",
+          "usuari": "Clara",
+          "km": 15,
+          "descripcio": "ara?",
+          "data": "2025-05-11"
+        }
+      ],
+      "historial": []
+    },
+    "car_06cd9fb7": {
+      "id": "car_06cd9fb7",
+      "nom": "Volvo",
+      "emoji": "\ud83d\udef5",
+      "usuaris": [
+        {
+          "id": "u_5d8ae215",
+          "nom": "Mar\u00e7al"
+        },
+        {
+          "id": "u_107bbe95",
+          "nom": "Meritxell"
+        },
+        {
+          "id": "u_8cced0cb",
+          "nom": "Roger"
+        }
+      ],
+      "despeses": [],
+      "usos": [],
+      "historial": []
+    },
+    "car_f685ff96": {
+      "id": "car_f685ff96",
+      "nom": "V",
+      "emoji": "\ud83d\ude97",
+      "usuaris": [
+        {
+          "id": "u_7b6d6907",
+          "nom": "Merixell"
+        },
+        {
+          "id": "u_15013b3e",
+          "nom": "Mar\u00e7al"
+        }
+      ],
+      "despeses": [],
+      "usos": [],
+      "historial": []
+    },
+    "car_b905882c": {
+      "id": "car_b905882c",
+      "nom": "Volvo v2",
+      "emoji": "\ud83d\ude97",
+      "usuaris": [
+        {
+          "id": "u_4ea98e48",
+          "nom": "Txell"
+        },
+        {
+          "id": "u_f98fd13e",
+          "nom": "Mar\u00e7al"
+        }
+      ],
+      "despeses": [],
+      "usos": [],
+      "historial": []
+    },
+    "car_b7d844b7": {
+      "id": "car_b7d844b7",
+      "nom": "sdfsadf",
+      "emoji": "\ud83d\ude97",
+      "usuaris": [],
+      "despeses": [],
+      "usos": [],
+      "historial": []
+    },
+    "car_c388937f": {
+      "id": "car_c388937f",
+      "nom": "sdfsdf",
+      "emoji": "\ud83d\ude97",
+      "usuaris": [],
+      "despeses": [],
+      "usos": [],
+      "historial": []
+    },
+    "car_5d240422": {
+      "id": "car_5d240422",
+      "nom": "ytj",
+      "emoji": "\ud83d\ude97",
+      "usuaris": [],
+      "despeses": [],
+      "usos": [],
+      "historial": []
+    },
+    "car_cb3cdcdb": {
+      "id": "car_cb3cdcdb",
+      "nom": "yjtyj",
+      "emoji": "\ud83d\ude97",
+      "usuaris": [],
+      "despeses": [],
+      "usos": [],
+      "historial": []
+    }
+  }
+}
