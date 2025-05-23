@@ -44,7 +44,6 @@ with tab1:
             use_container_width=True,
             num_rows="fixed",
             hide_index=True,
-            disabled=True,
         )
         files_a_eliminar = edited_df[edited_df["Eliminar"] == True].index.tolist()
         if files_a_eliminar:

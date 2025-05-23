@@ -1,0 +1,13 @@
+[theme]
+base="light"
+
+[server]
+headless = true
+runOnSave = true
+
+[client]
+showSidebarNavigation = false
+
+[ui]
+pageTitle = "Cotxes compartits"
+favicon = "🚗"
