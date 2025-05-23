@@ -95,25 +95,25 @@ with tab2:
 # --- 📊 Balanç ---
 with tab3:
     # st.markdown("### 💰 Balanç de despeses")
-
     despeses = cotxe_data["despeses"]
     usos = cotxe_data["usos"]
     
     resum_general, resum_per_usuari = calcular_balanc(despeses, usos, cotxe_data.get("usuaris", []))
 
-    st.markdown(f"### 📊 Resum del cotxe")
-    st.markdown(f"- **Total despeses:** {resum_general['total_despesa']} €")
-    st.markdown(f"- **Total quilòmetres:** {resum_general['total_km']} km")
-
-    st.markdown("---")
-    st.markdown("### 👤 Resum per persona")
-    for p in resum_per_usuari:
-        difer = p["diferencia"]
-        color = "green" if difer >= 0 else "red"
-        emoji = "🟢" if difer >= 0 else "🔴"
-        label = f""" {emoji} {p['usuari']}  :{color}[{difer:+.2f} €] """
-        with st.expander(label, expanded=False):
-            st.write(f"🛣️ **Km fets:** {p['km_fets']} km ({p['percentatge_km']}%)")
-            st.write(f"💸 **Ha pagat:** {p['ha_pagat']} €")
-            st.write(f"🧾 **Hauria de pagar:** {p['hauria_de_pagar']} €")
-            st.write(f"📉 **Diferència:** `{difer:+.2f} €`")
+    with st.container(border=True):
+        st.markdown(f"### 📊 Resum del cotxe")
+        st.markdown(f"- **Total despeses:** {resum_general['total_despesa']} €")
+        st.markdown(f"- **Total quilòmetres:** {resum_general['total_km']} km")
+    
+    with st.container(border=True):
+        st.markdown("### 👤 Resum per persona")
+        for p in resum_per_usuari:
+            difer = p["diferencia"]
+            color = "green" if difer >= 0 else "red"
+            emoji = "🟢" if difer >= 0 else "🔴"
+            label = f""" {emoji} {p['usuari']}  :{color}[{difer:+.2f} €] """
+            with st.expander(label, expanded=False):
+                st.write(f"🛣️ **Km fets:** {p['km_fets']} km ({p['percentatge_km']}%)")
+                st.write(f"💸 **Ha pagat:** {p['ha_pagat']} €")
+                st.write(f"🧾 **Hauria de pagar:** {p['hauria_de_pagar']} €")
+                st.write(f"📉 **Diferència:** `{difer:+.2f} €`")
