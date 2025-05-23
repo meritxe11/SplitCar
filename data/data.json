@@ -128,46 +128,6 @@
         }
       ],
       "historial": []
-    },
-    "car_06cd9fb7": {
-      "id": "car_06cd9fb7",
-      "nom": "Volvo",
-      "emoji": "\ud83d\udef5",
-      "usuaris": [
-        {
-          "id": "u_5d8ae215",
-          "nom": "Mar\u00e7al"
-        },
-        {
-          "id": "u_107bbe95",
-          "nom": "Meritxell"
-        },
-        {
-          "id": "u_8cced0cb",
-          "nom": "Roger"
-        }
-      ],
-      "despeses": [],
-      "usos": [],
-      "historial": []
-    },
-    "car_f685ff96": {
-      "id": "car_f685ff96",
-      "nom": "V",
-      "emoji": "\ud83d\ude97",
-      "usuaris": [
-        {
-          "id": "u_7b6d6907",
-          "nom": "Merixell"
-        },
-        {
-          "id": "u_15013b3e",
-          "nom": "Mar\u00e7al"
-        }
-      ],
-      "despeses": [],
-      "usos": [],
-      "historial": []
     }
   }
 }
