@@ -55,20 +55,6 @@
           "data": "2024-05-24"
         },
         {
-          "id": "d_11541bde",
-          "usuari": "Joan",
-          "import": 0.0,
-          "descripcio": "",
-          "data": "2025-05-22"
-        },
-        {
-          "id": "d_1c257546",
-          "usuari": "Joan",
-          "import": 0.0,
-          "descripcio": "",
-          "data": "2025-05-22"
-        },
-        {
           "id": "d_7af52362",
           "usuari": "Clara",
           "import": 15.0,
@@ -99,32 +85,11 @@
           "descripcio": "Reuni\u00c3\u00b3 a Barcelona"
         },
         {
-          "id": "km10",
-          "usuari": "Marc",
-          "km": 100,
-          "data": "2024-05-23",
-          "descripcio": "Reuni\u00c3\u00b3 a Barcelona"
-        },
-        {
           "id": "km11",
           "usuari": "Clara",
           "km": 80,
           "data": "2024-05-23",
           "descripcio": "Reuni\u00c3\u00b3 a Barcelona"
-        },
-        {
-          "id": "km12",
-          "usuari": "Marc",
-          "km": 60,
-          "data": "2024-05-24",
-          "descripcio": "Reuni\u00c3\u00b3 a Barcelona"
-        },
-        {
-          "id": "km_fb69e7c5",
-          "usuari": "Clara",
-          "km": 15,
-          "descripcio": "ara?",
-          "data": "2025-05-11"
         }
       ],
       "historial": []

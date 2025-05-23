@@ -9,6 +9,8 @@ from data_manager import (
 # Comprovació de cotxe seleccionat
 if "current_car" not in st.session_state:
     st.error("No hi ha cap cotxe seleccionat. Torna a la pàgina principal.")
+    if st.button("Torna a la pàgina principal"):
+        st.switch_page("app.py")
     st.stop()
 
 cotxe = st.session_state.current_car
@@ -22,7 +24,8 @@ cotxe_emoji = cotxe_data.get("emoji", "🚗")
 
 # Llista d’usuaris disponibles
 st.header(f"{cotxe_emoji} {cotxe_nom}")
-
+if st.button(" ← ", type="tertiary" ):
+    st.switch_page("app.py")
 tab1, tab2, tab3 = st.tabs(["⛽️ Dipòsits", "🛣️ Usos", "📊 Balanç"])
 
 # --- ⛽️ Dipòsits ---
@@ -32,24 +35,26 @@ with tab1:
         st.switch_page("pages/add_despesa.py")
 
     if cotxe_data["despeses"]:
-        df = pd.DataFrame({
+        df_d = pd.DataFrame({
             "Data": [d["data"] for d in cotxe_data["despeses"]],
             "Usuari": [d["usuari"] for d in cotxe_data["despeses"]],
             "Import": [f"{d["import"]} €" for d in cotxe_data["despeses"]],
             "Descripció": [d["descripcio"] for d in cotxe_data["despeses"]],
             "Eliminar": [False] * len(cotxe_data["despeses"])
         }).sort_values(by="Data", ascending=False)
-        edited_df = st.data_editor(
-            df,
+        edited_df_d = st.data_editor(
+            df_d,
             use_container_width=True,
             num_rows="fixed",
             hide_index=True,
         )
-        files_a_eliminar = edited_df[edited_df["Eliminar"] == True].index.tolist()
-        if files_a_eliminar:
-            if st.button("🗑️ Elimina seleccionats"):
-                for i in sorted(files_a_eliminar, reverse=True):
+        files_a_eliminar_d = edited_df_d[edited_df_d["Eliminar"] == True].index.tolist()
+        if files_a_eliminar_d:
+            if st.button("🗑️ Elimina les despeses seleccionades"):
+                for i in sorted(files_a_eliminar_d, reverse=True):
                     cotxe_data["despeses"].pop(i)
+                data["cars"][cotxe] = cotxe_data
+                save_data(data)
                 st.rerun()
     else:
         st.info("Encara no hi ha cap despesa registrada.")
@@ -61,24 +66,27 @@ with tab2:
     if st.button("➕ Afegir ús", use_container_width=True):
         st.switch_page("pages/add_us.py")
     if cotxe_data["usos"]:
-        df = pd.DataFrame({
+        df_u = pd.DataFrame({
             "Data": [d["data"] for d in cotxe_data["usos"]],
             "Usuari": [d["usuari"] for d in cotxe_data["usos"]],
             "Km": [f"{d["km"]} Km" for d in cotxe_data["usos"]],
             "Descripció": [d["descripcio"] for d in cotxe_data["usos"]],
             "Eliminar": [False] * len(cotxe_data["usos"])
         }).sort_values(by="Data", ascending=False)
-        edited_df = st.data_editor(
-            df,
+        edited_df_u = st.data_editor(
+            df_u,
             use_container_width=True,
             num_rows="fixed",
             hide_index=True,
         )
-        files_a_eliminar = edited_df[edited_df["Eliminar"] == True].index.tolist()
-        if files_a_eliminar:
-            if st.button("🗑️ Elimina seleccionats"):
-                for i in sorted(files_a_eliminar, reverse=True):
+        files_a_eliminar_u = edited_df_u[edited_df_u["Eliminar"] == True].index.tolist()
+        if files_a_eliminar_u:
+            if st.button("🗑️ Elimina els usos seleccionats"):
+                for i in sorted(files_a_eliminar_u, reverse=True):
                     cotxe_data["usos"].pop(i)
+                data["cars"][cotxe] = cotxe_data
+                save_data(data)
+                st.rerun()
                 st.rerun()
     else:
         st.info("Encara no hi ha cap ús registrat.")
