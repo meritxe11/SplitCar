@@ -1,0 +1,721 @@
+<!DOCTYPE html><html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Viatge a Manhattan</title>  <!-- Leaflet: mapa interactiu -->  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>  <style>
+    :root {
+      --bg: #fafafa;
+      --card: #ffffff;
+      --text: #171717;
+      --muted: #737373;
+      --line: #e7e7e7;
+      --soft: #f4f4f5;
+      --accent: #111111;
+      --radius: 22px;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      padding: 20px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 16px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 2.1rem);
+      letter-spacing: -0.04em;
+    }
+
+    .title p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .tabs {
+      display: flex;
+      background: var(--soft);
+      padding: 4px;
+      border-radius: 999px;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .tab {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .tab.active {
+      background: var(--card);
+      color: var(--text);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(330px, 0.75fr);
+      gap: 16px;
+      min-height: 0;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      min-height: 620px;
+      filter: grayscale(0.05) contrast(0.96) brightness(1.02);
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      min-height: 620px;
+    }
+
+    .sidebar-head {
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sidebar-head h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .sidebar-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .search {
+      width: 100%;
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px 13px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .calendar-view,
+    .list-view {
+      padding: 16px;
+      overflow: auto;
+    }
+
+    .calendar-month {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .weekday {
+      color: var(--muted);
+      font-size: 0.75rem;
+      text-align: center;
+      padding-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .day {
+      min-height: 78px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 8px;
+      background: #fff;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .day:hover {
+      transform: translateY(-1px);
+      border-color: #cfcfcf;
+    }
+
+    .day.empty {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .day-number {
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+
+    .event-dot {
+      margin-top: 6px;
+      display: block;
+      width: fit-content;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      background: var(--soft);
+      border-radius: 999px;
+      padding: 4px 7px;
+      font-size: 0.72rem;
+      color: #333;
+    }
+
+    .place-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      background: #fff;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .place-card:hover {
+      transform: translateY(-1px);
+      border-color: #cfcfcf;
+    }
+
+    .place-card h3 {
+      margin: 0;
+      font-size: 0.98rem;
+      letter-spacing: -0.01em;
+    }
+
+    .place-card p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 10px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: #444;
+      font-size: 0.75rem;
+      font-weight: 650;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.24);
+      padding: 20px;
+      z-index: 999;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(620px, 100%);
+      max-height: min(760px, 92vh);
+      overflow: auto;
+      background: #fff;
+      border-radius: 28px;
+      box-shadow: 0 35px 90px rgba(0, 0, 0, 0.18);
+      border: 1px solid var(--line);
+      padding: 22px;
+    }
+
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 16px;
+    }
+
+    .modal h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      letter-spacing: -0.04em;
+    }
+
+    .modal .meta {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .close {
+      border: 0;
+      background: var(--soft);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .detail-section {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .detail-section h4 {
+      margin: 0 0 8px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .detail-section p,
+    .detail-section li {
+      color: #333;
+      line-height: 1.55;
+      font-size: 0.96rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 11px 15px;
+      text-decoration: none;
+      font-weight: 750;
+      font-size: 0.92rem;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .leaflet-popup-content-wrapper,
+    .leaflet-popup-tip {
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .popup-title {
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .popup-button {
+      margin-top: 8px;
+      width: 100%;
+      border: 0;
+      background: #111;
+      color: #fff;
+      border-radius: 999px;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    @media (max-width: 920px) {
+      .app {
+        padding: 12px;
+      }
+
+      header {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .tabs {
+        width: 100%;
+      }
+
+      .tab {
+        flex: 1;
+      }
+
+      main {
+        display: block;
+      }
+
+      .map-panel,
+      .sidebar {
+        display: none;
+      }
+
+      body.show-map .map-panel {
+        display: block;
+      }
+
+      body.show-calendar .sidebar {
+        display: flex;
+      }
+
+      #map,
+      .sidebar {
+        min-height: calc(100vh - 160px);
+        height: calc(100vh - 160px);
+      }
+    }
+  </style></head>
+<body class="show-map">
+  <div class="app">
+    <header>
+      <div class="title">
+        <h1>Viatge a Manhattan</h1>
+        <p>Mapa, calendari i detalls dels llocs en una sola interfície.</p>
+      </div>
+      <nav class="tabs" aria-label="Canviar vista">
+        <button class="tab active" data-view="map">Mapa</button>
+        <button class="tab" data-view="calendar">Calendari</button>
+      </nav>
+    </header><main>
+  <section class="panel map-panel" aria-label="Mapa de punts del viatge">
+    <div id="map"></div>
+  </section>
+
+  <aside class="panel sidebar" aria-label="Calendari i llista de llocs">
+    <div class="sidebar-head">
+      <h2>Calendari del viatge</h2>
+      <p>Clica un dia o un lloc per veure’n tota la informació.</p>
+      <input id="search" class="search" type="search" placeholder="Buscar lloc, zona o nota..." />
+    </div>
+
+    <div class="calendar-view">
+      <div id="calendar" class="calendar-month"></div>
+    </div>
+
+    <div id="placeList" class="list-view"></div>
+  </aside>
+</main>
+
+  </div>  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <article class="modal">
+      <div class="modal-top">
+        <div>
+          <h2 id="modalTitle"></h2>
+          <p id="modalMeta" class="meta"></p>
+        </div>
+        <button class="close" id="closeModal" aria-label="Tancar">×</button>
+      </div><div class="detail-section">
+    <h4>Notes</h4>
+    <p id="modalNotes"></p>
+  </div>
+
+  <div class="detail-section">
+    <h4>Entrades / reserves</h4>
+    <ul id="modalTickets"></ul>
+  </div>
+
+  <div class="actions">
+    <a id="mapsLink" class="button primary" target="_blank" rel="noreferrer">Obrir a Google Maps</a>
+    <button id="focusMap" class="button">Veure al mapa</button>
+  </div>
+</article>
+
+  </div>  <script>
+    // ------------------------------------------------------------
+    // EDITA AQUESTA PART: afegeix aquí els vostres llocs reals.
+    // ------------------------------------------------------------
+    const places = [
+      {
+        id: "central-park",
+        title: "Central Park",
+        date: "2026-06-12",
+        time: "10:00",
+        area: "Uptown",
+        lat: 40.7829,
+        lng: -73.9654,
+        notes: "Passeig tranquil pel parc. Ideal per començar el dia sense pressa.",
+        tickets: ["Sense entrada", "Portar cafè o esmorzar per emportar"],
+      },
+      {
+        id: "met",
+        title: "The Metropolitan Museum of Art",
+        date: "2026-06-12",
+        time: "12:30",
+        area: "Upper East Side",
+        lat: 40.7794,
+        lng: -73.9632,
+        notes: "Visita cultural. Es pot personalitzar amb sales imprescindibles o entrades.",
+        tickets: ["Afegir número de reserva aquí", "Guardar QR o captura de pantalla"],
+      },
+      {
+        id: "times-square",
+        title: "Times Square",
+        date: "2026-06-13",
+        time: "19:00",
+        area: "Midtown",
+        lat: 40.7580,
+        lng: -73.9855,
+        notes: "Millor al vespre per veure els llums. Pot ser zona molt plena.",
+        tickets: ["Sense entrada"],
+      },
+      {
+        id: "one-world",
+        title: "One World Observatory",
+        date: "2026-06-14",
+        time: "16:30",
+        area: "Downtown",
+        lat: 40.7130,
+        lng: -74.0132,
+        notes: "Mirador amb bones vistes. Revisar hora exacta d’entrada.",
+        tickets: ["Afegir entrada / reserva", "Arribar 20 minuts abans"],
+      },
+    ];
+
+    const tripMonth = "2026-06";
+    const monthTitle = "Juny 2026";
+
+    let selectedPlace = null;
+    const markers = new Map();
+
+    const map = L.map("map", {
+      zoomControl: true,
+      scrollWheelZoom: true,
+    }).setView([40.758, -73.9855], 12);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap",
+    }).addTo(map);
+
+    const bounds = [];
+
+    places.forEach((place) => {
+      const marker = L.marker([place.lat, place.lng]).addTo(map);
+      marker.bindPopup(`
+        <div class="popup-title">${place.title}</div>
+        <div>${formatDate(place.date)} · ${place.time}</div>
+        <button class="popup-button" onclick="openPlace('${place.id}')">Veure detalls</button>
+      `);
+      markers.set(place.id, marker);
+      bounds.push([place.lat, place.lng]);
+    });
+
+    if (bounds.length) {
+      map.fitBounds(bounds, { padding: [35, 35] });
+    }
+
+    function formatDate(dateString) {
+      return new Intl.DateTimeFormat("ca-ES", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+      }).format(new Date(dateString + "T12:00:00"));
+    }
+
+    function googleMapsUrl(place) {
+      return `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lng}`;
+    }
+
+    function renderCalendar() {
+      const calendar = document.getElementById("calendar");
+      calendar.innerHTML = "";
+
+      const weekdays = ["Dl", "Dt", "Dc", "Dj", "Dv", "Ds", "Dg"];
+      weekdays.forEach((day) => {
+        const el = document.createElement("div");
+        el.className = "weekday";
+        el.textContent = day;
+        calendar.appendChild(el);
+      });
+
+      const [year, month] = tripMonth.split("-").map(Number);
+      const firstDay = new Date(year, month - 1, 1);
+      const lastDay = new Date(year, month, 0);
+      const startOffset = (firstDay.getDay() + 6) % 7;
+
+      for (let i = 0; i < startOffset; i++) {
+        const empty = document.createElement("div");
+        empty.className = "day empty";
+        calendar.appendChild(empty);
+      }
+
+      for (let day = 1; day <= lastDay.getDate(); day++) {
+        const date = `${tripMonth}-${String(day).padStart(2, "0")}`;
+        const dayPlaces = places.filter((place) => place.date === date);
+
+        const cell = document.createElement("button");
+        cell.className = "day";
+        cell.type = "button";
+        cell.innerHTML = `<div class="day-number">${day}</div>`;
+
+        dayPlaces.slice(0, 3).forEach((place) => {
+          const event = document.createElement("span");
+          event.className = "event-dot";
+          event.textContent = place.title;
+          cell.appendChild(event);
+        });
+
+        if (dayPlaces.length) {
+          cell.addEventListener("click", () => openDay(date));
+        }
+
+        calendar.appendChild(cell);
+      }
+    }
+
+    function renderList(filteredPlaces = places) {
+      const list = document.getElementById("placeList");
+      list.innerHTML = "";
+
+      const sorted = [...filteredPlaces].sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
+
+      sorted.forEach((place) => {
+        const card = document.createElement("article");
+        card.className = "place-card";
+        card.innerHTML = `
+          <h3>${place.title}</h3>
+          <p>${formatDate(place.date)} · ${place.time} · ${place.area}</p>
+          <span class="tag">${place.area}</span>
+        `;
+        card.addEventListener("click", () => openPlace(place.id));
+        list.appendChild(card);
+      });
+    }
+
+    function openDay(date) {
+      const dayPlaces = places.filter((place) => place.date === date);
+      renderList(dayPlaces);
+      document.querySelector(".sidebar-head h2").textContent = formatDate(date);
+      document.querySelector(".sidebar-head p").textContent = `${dayPlaces.length} lloc${dayPlaces.length === 1 ? "" : "s"} previstos aquest dia.`;
+    }
+
+    function openPlace(id) {
+      const place = places.find((item) => item.id === id);
+      if (!place) return;
+
+      selectedPlace = place;
+
+      document.getElementById("modalTitle").textContent = place.title;
+      document.getElementById("modalMeta").textContent = `${formatDate(place.date)} · ${place.time} · ${place.area}`;
+      document.getElementById("modalNotes").textContent = place.notes || "Sense notes encara.";
+
+      const tickets = document.getElementById("modalTickets");
+      tickets.innerHTML = "";
+      (place.tickets || ["Sense informació d’entrades encara."]).forEach((ticket) => {
+        const li = document.createElement("li");
+        li.textContent = ticket;
+        tickets.appendChild(li);
+      });
+
+      document.getElementById("mapsLink").href = googleMapsUrl(place);
+      document.getElementById("modalBackdrop").classList.add("open");
+      document.getElementById("modalBackdrop").setAttribute("aria-hidden", "false");
+    }
+
+    function closeModal() {
+      document.getElementById("modalBackdrop").classList.remove("open");
+      document.getElementById("modalBackdrop").setAttribute("aria-hidden", "true");
+    }
+
+    document.getElementById("closeModal").addEventListener("click", closeModal);
+    document.getElementById("modalBackdrop").addEventListener("click", (event) => {
+      if (event.target.id === "modalBackdrop") closeModal();
+    });
+
+    document.getElementById("focusMap").addEventListener("click", () => {
+      if (!selectedPlace) return;
+      closeModal();
+      document.body.classList.remove("show-calendar");
+      document.body.classList.add("show-map");
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.classList.toggle("active", tab.dataset.view === "map");
+      });
+      setTimeout(() => {
+        map.invalidateSize();
+        map.setView([selectedPlace.lat, selectedPlace.lng], 15);
+        markers.get(selectedPlace.id)?.openPopup();
+      }, 150);
+    });
+
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const view = tab.dataset.view;
+        document.body.classList.toggle("show-map", view === "map");
+        document.body.classList.toggle("show-calendar", view === "calendar");
+        document.querySelectorAll(".tab").forEach((item) => item.classList.remove("active"));
+        tab.classList.add("active");
+        setTimeout(() => map.invalidateSize(), 150);
+      });
+    });
+
+    document.getElementById("search").addEventListener("input", (event) => {
+      const query = event.target.value.trim().toLowerCase();
+      const filtered = places.filter((place) => {
+        return [place.title, place.area, place.notes, ...(place.tickets || [])]
+          .join(" ")
+          .toLowerCase()
+          .includes(query);
+      });
+      document.querySelector(".sidebar-head h2").textContent = query ? "Resultats" : "Calendari del viatge";
+      document.querySelector(".sidebar-head p").textContent = query
+        ? `${filtered.length} resultat${filtered.length === 1 ? "" : "s"} trobats.`
+        : "Clica un dia o un lloc per veure’n tota la informació.";
+      renderList(filtered);
+    });
+
+    renderCalendar();
+    renderList();
+  </script></body>
+</html>
